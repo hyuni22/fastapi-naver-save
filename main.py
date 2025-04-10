@@ -37,21 +37,14 @@ async def save_address(data: AddressRequest):
         driver.get(f"https://map.naver.com/v5/search/{address}")
         logger.info("🌐 네이버 지도 페이지 접속 완료")
         time.sleep(6)
-# iframe 자동 감지 후 전환
-try:
-    iframe = driver.find_element(By.ID, "searchIframe")
-    driver.switch_to.frame(iframe)
-    logger.info("🖼️ iframe 전환 완료")
-except Exception:
-    logger.warning("⚠️ iframe 없음 → 현재 페이지에서 바로 진행 시도")
 
+        # iframe 자동 감지 후 전환
         try:
-            driver.switch_to.frame("searchIframe")
+            iframe = driver.find_element(By.ID, "searchIframe")
+            driver.switch_to.frame(iframe)
             logger.info("🖼️ iframe 전환 완료")
-        except Exception as e:
-            logger.error(f"❌ iframe 전환 실패: {e}")
-            driver.quit()
-            return {"result": "❌ iframe 전환 실패", "error": str(e)}
+        except Exception:
+            logger.warning("⚠️ iframe 없음 → 현재 페이지에서 바로 진행 시도")
 
         try:
             save_button = driver.find_element(By.XPATH, "//button[contains(@class, 'btn_favorite') and .//span[text()='저장']]")
